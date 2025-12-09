@@ -172,14 +172,9 @@ python -m exifplus
 
 ---
 
-### Optional: GUI Screenshot (recommended!)
+### Screenshot
 
-Add a screenshot so users instantly understand what it does.
-Example:
-
-```
 ![ExifPlus Screenshot](Screenshot.png)
-```
 
 ---
 
