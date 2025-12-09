@@ -1,0 +1,6 @@
+ttkbootstrap
+Pillow
+exifread
+pyexiv2
+hachoir
+pyheif
