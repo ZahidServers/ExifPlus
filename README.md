@@ -114,7 +114,7 @@ exifplus
 
 ---
 
-### ⚠️ Debian/Ubuntu/Parrot Users
+### ⚠️ Debian/Ubuntu/Parrot/Kali Users
 
 These systems use **PEP 668** and block global installs. If you try:
 
@@ -174,7 +174,7 @@ python -m exifplus
 
 ### Screenshot
 
-![ExifPlus Screenshot](Screenshot.png)
+![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshot.png)
 
 ---
 
