@@ -80,6 +80,122 @@ pip install pyexiv2 hachoir ttkbootstrap
 * **Error: `Invalid metadata key`**:
   When trying to modify metadata, ensure that the key you're trying to modify exists in the original file. You can view all the available keys in the table after loading a file.
 
+## 📦 Installation
+
+### 🔹 Recommended (Pipx)
+
+If you intend to run ExifPlus as an application:
+
+```bash
+pipx install exifplus
+```
+
+Then run it:
+
+```bash
+exifplus
+```
+
+---
+
+### 🔹 Using pip (Virtual Environment)
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install exifplus
+```
+
+Run:
+
+```bash
+exifplus
+```
+
+---
+
+### ⚠️ Debian/Ubuntu/Parrot Users
+
+These systems use **PEP 668** and block global installs. If you try:
+
+```bash
+pip install exifplus
+```
+
+You may see:
+
+```
+error: externally-managed-environment
+```
+
+To fix, use either:
+
+```bash
+pipx install exifplus
+```
+
+or:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install exifplus
+```
+
+---
+
+### 🔧 Optional (Not required but allowed)
+
+If you really want to install system-wide:
+
+```bash
+pip install exifplus --break-system-packages
+```
+
+*Not recommended.*
+
+---
+
+### 🚀 Running
+
+After installation:
+
+```bash
+exifplus
+```
+
+or
+
+```bash
+python -m exifplus
+```
+
+---
+
+### Optional: GUI Screenshot (recommended!)
+
+Add a screenshot so users instantly understand what it does.
+Example:
+
+```
+![ExifPlus Screenshot](assets/screenshot.png)
+```
+
+---
+
+### Summary of What to Include:
+
+| Info                                   | Include in README?            |
+| -------------------------------------- | ----------------------------- |
+| Pip install instructions               | ✅                             |
+| Virtual environment instructions       | ✅                             |
+| pipx install option                    | ✅ (recommended for GUI apps)  |
+| `--break-system-packages` method       | ⚠️ Optional (label as unsafe) |
+| Technical build logs/errors            | ❌ No                          |
+| The big stack trace you pasted earlier | ❌ No                          |
+
+---
+
 ### **Contributing**
 
 Contributions to ExifPlus are welcome! If you'd like to report a bug, suggest a feature, or submit a pull request, feel free to fork the project and submit changes.
