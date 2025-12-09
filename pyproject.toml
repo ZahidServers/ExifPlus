@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "exifplus"  # PyPI package name (must be unique)
+version = "0.1.0"
+description = "A simple EXIF metadata viewer and editor."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Mohammed Zahid Wadiwale", email = "your-email@example.com" }
+]
+dependencies = [
+  "pyexiv2",
+  "hachoir",
+  "ttkbootstrap",
+  "exifread",
+]
+
+[project.urls]
+Homepage = "https://github.com/ZahidServers/ExifPlus"
+Source = "https://github.com/ZahidServers/ExifPlus"
+Issues = "https://github.com/ZahidServers/ExifPlus/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["exifplus*"]
