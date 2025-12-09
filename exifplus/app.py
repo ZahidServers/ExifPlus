@@ -390,7 +390,11 @@ class MetadataApp:
                   command=about.destroy).pack(pady=15)
 
 
-if __name__ == "__main__":
+def main():
+    """Entry point to launch the GUI."""
     root = tb.Window(themename="flatly")
     app = MetadataApp(root)
     root.mainloop()
+
+if __name__ == "__main__":
+    main()
