@@ -178,21 +178,8 @@ Add a screenshot so users instantly understand what it does.
 Example:
 
 ```
-![ExifPlus Screenshot](assets/screenshot.png)
+![ExifPlus Screenshot](Screenshot.png)
 ```
-
----
-
-### Summary of What to Include:
-
-| Info                                   | Include in README?            |
-| -------------------------------------- | ----------------------------- |
-| Pip install instructions               | ✅                             |
-| Virtual environment instructions       | ✅                             |
-| pipx install option                    | ✅ (recommended for GUI apps)  |
-| `--break-system-packages` method       | ⚠️ Optional (label as unsafe) |
-| Technical build logs/errors            | ❌ No                          |
-| The big stack trace you pasted earlier | ❌ No                          |
 
 ---
 
