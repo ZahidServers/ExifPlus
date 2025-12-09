@@ -5,7 +5,7 @@ ExifPlus - A simple EXIF metadata viewer and editor.
 
 from .app import main
 
-__version__ = "0.1.0"
+__version__ = "1.1.2"
 __all__ = ["main", "__version__"]
 
 
