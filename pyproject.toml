@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "exifplus"  # PyPI package name (must be unique)
-version = "0.1.0"
+version = "1.1.2"
 description = "A simple EXIF metadata viewer and editor."
 readme = "README.md"
 requires-python = ">=3.9"
