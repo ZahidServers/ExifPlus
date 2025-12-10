@@ -26,7 +26,8 @@ ExifPlus is a modern and intuitive tool designed for managing metadata in image 
 * **Supports multiple media formats** including `.jpg`, `.png`, `.tiff`, `.heic`, `.mp4`, `.avi`, `.mov`, and `.mkv`.
 * **Batch processing** to edit metadata across multiple files (future versions).
 * **Save changes to metadata** and overwrite the original file.
-* **Context Menu** with an option to delete rows of metadata for easy data management.
+* **Context Menu** with an option to delete rows of metadata for easy data management, or add new rows.
+* **Export** the data as CSV or JSON
 * **Cross-platform** support (Windows, macOS, Linux).
 
 ### **Installation**
@@ -182,6 +183,8 @@ python -m exifplus
 ### Screenshot
 
 ![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshot.png)
+![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshots.png)
+![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshots2.png)
 
 ---
 
