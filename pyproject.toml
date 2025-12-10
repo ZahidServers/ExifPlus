@@ -25,8 +25,6 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "License :: OSI Approved :: BSD License",
-    "License :: OSI Approved :: BSD 3-Clause License",
     "Operating System :: OS Independent",
     "Intended Audience :: End Users/Desktop",
     "Topic :: Multimedia :: Graphics",
