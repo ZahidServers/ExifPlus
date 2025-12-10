@@ -1,3 +1,10 @@
+# ExifPlus
+
+[![PyPI version](https://img.shields.io/pypi/v/exifplus.svg)](https://pypi.org/project/exifplus/)
+[![Python versions](https://img.shields.io/pypi/pyversions/exifplus.svg)](https://pypi.org/project/exifplus/)
+[![License](https://img.shields.io/pypi/l/exifplus.svg)](https://github.com/ZahidServers/ExifPlus/blob/main/LICENSE)
+[![Tests](https://github.com/ZahidServers/ExifPlus/actions/workflows/python-package.yml/badge.svg)](https://github.com/ZahidServers/ExifPlus/actions)
+
 ### **ExifPlus** - Short Description & ReadMe
 
 **ExifPlus** is a versatile and user-friendly metadata viewer and editor for image and video files. It allows you to view and modify EXIF, IPTC, and XMP metadata, making it an essential tool for photographers, videographers, and anyone who needs to manage media metadata easily. With a sleek GUI powered by `ttkbootstrap` and advanced functionality through libraries like `pyexiv2`, `hachoir`, and `exifread`, ExifPlus makes it simple to interact with file metadata in just a few clicks.
