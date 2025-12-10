@@ -4,13 +4,13 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from tkinter import filedialog, messagebox
 import json
-import csv 
+import csv
 import exifread
 from PIL import Image
 import pyexiv2
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
-
+import subprocess
 
 class MetadataApp:
     def __init__(self, root):
