@@ -3,7 +3,8 @@ import tkinter as tk
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from tkinter import filedialog, messagebox
-
+import json
+import csv 
 import exifread
 from PIL import Image
 import pyexiv2
@@ -23,14 +24,13 @@ class MetadataApp:
         control_frame = tb.Frame(root, padding=10)
         control_frame.pack(fill=X)
 
-        tb.Button(control_frame, text="Open File", bootstyle=PRIMARY,
-                  command=self.open_file).pack(side=LEFT, padx=5)
+        tb.Button(control_frame, text="Open File", bootstyle=PRIMARY, command=self.open_file).pack(side=LEFT, padx=5)
 
-        tb.Button(control_frame, text="Save Metadata", bootstyle=SUCCESS,
-                  command=self.save_metadata).pack(side=LEFT, padx=5)
+        tb.Button(control_frame, text="Save Metadata", bootstyle=SUCCESS, command=self.save_metadata).pack(side=LEFT, padx=5)
+        
+        tb.Button(control_frame, text="Export", bootstyle=SECONDARY, command=self.export_metadata).pack(side=LEFT, padx=5)
 
-        tb.Button(control_frame, text="About", bootstyle=INFO,
-                  command=self.show_about).pack(side=LEFT, padx=5)
+        tb.Button(control_frame, text="About", bootstyle=INFO, command=self.show_about).pack(side=LEFT, padx=5)
 
         self.file_label = tb.Label(control_frame, text="No file selected", bootstyle=INFO)
         self.file_label.pack(side=LEFT, padx=10)
@@ -343,6 +343,92 @@ class MetadataApp:
 
         except Exception as e:
             messagebox.showerror("Error", f"Error saving metadata:\n{e}")
+    
+    # -----------------------------
+    # Export metadata (CSV / JSON)
+    # -----------------------------
+    def export_metadata(self):
+        if not self.metadata_dict:
+            messagebox.showerror("Error", "No metadata to export.")
+            return
+
+        popup = tk.Toplevel(self.root)
+        popup.title("Export Metadata")
+        popup.geometry("300x160")
+        popup.resizable(False, False)
+
+        tb.Label(
+            popup,
+            text="Export metadata as:",
+            font=("Arial", 12, "bold")
+        ).pack(pady=10)
+
+        btn_frame = tb.Frame(popup)
+        btn_frame.pack(pady=10)
+
+        def do_export_csv():
+            self._export_as_csv()
+            popup.destroy()
+
+        def do_export_json():
+            self._export_as_json()
+            popup.destroy()
+
+        tb.Button(
+            btn_frame,
+            text="CSV",
+            bootstyle=PRIMARY,
+            command=do_export_csv,
+            width=10
+        ).grid(row=0, column=0, padx=10)
+
+        tb.Button(
+            btn_frame,
+            text="JSON",
+            bootstyle=SUCCESS,
+            command=do_export_json,
+            width=10
+        ).grid(row=0, column=1, padx=10)
+
+        tb.Button(
+            popup,
+            text="Cancel",
+            bootstyle=SECONDARY,
+            command=popup.destroy
+        ).pack(pady=5)
+
+    def _export_as_csv(self):
+        path = filedialog.asksaveasfilename(
+            defaultextension=".csv",
+            filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
+        )
+        if not path:
+            return
+
+        try:
+            with open(path, "w", newline="", encoding="utf-8") as f:
+                writer = csv.writer(f)
+                writer.writerow(["Key", "Value"])
+                for k, v in self.metadata_dict.items():
+                    writer.writerow([k, v])
+            messagebox.showinfo("Export", f"Metadata exported as CSV:\n{path}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Error exporting CSV:\n{e}")
+
+    def _export_as_json(self):
+        path = filedialog.asksaveasfilename(
+            defaultextension=".json",
+            filetypes=[("JSON files", "*.json"), ("All files", "*.*")]
+        )
+        if not path:
+            return
+
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(self.metadata_dict, f, ensure_ascii=False, indent=2)
+            messagebox.showinfo("Export", f"Metadata exported as JSON:\n{path}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Error exporting JSON:\n{e}")
 
 
     # -----------------------------
