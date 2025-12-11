@@ -5,18 +5,26 @@ from ttkbootstrap.constants import *
 from tkinter import filedialog, messagebox
 import json
 import csv
+import subprocess
 import exifread
 from PIL import Image
 import pyexiv2
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
-import subprocess
+import platform
+import urllib.request
+import urllib.parse
+import tempfile
+import html
+import webbrowser
+import os
+IS_WINDOWS = platform.system() == "Windows"
 
 class MetadataApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Metadata Viewer/Editor (EXIF • XMP • IPTC • Meta Data)")
-        self.root.geometry("1000x650")
+        self.root.geometry("1200x650")
 
         self.style = tb.Style("flatly")
 
@@ -24,11 +32,13 @@ class MetadataApp:
         control_frame = tb.Frame(root, padding=10)
         control_frame.pack(fill=X)
 
-        tb.Button(control_frame, text="Open File", bootstyle=PRIMARY, command=self.open_file).pack(side=LEFT, padx=5)
+        tb.Button(control_frame, text="Open File", bootstyle=PRIMARY, command=self.show_open_options).pack(side=LEFT, padx=5)
 
         tb.Button(control_frame, text="Save Metadata", bootstyle=SUCCESS, command=self.save_metadata).pack(side=LEFT, padx=5)
         
         tb.Button(control_frame, text="Export", bootstyle=SECONDARY, command=self.export_metadata).pack(side=LEFT, padx=5)
+
+        tb.Button( control_frame, text="Generate Report", bootstyle=WARNING, command=self.generate_report ).pack(side=LEFT, padx=5)
 
         tb.Button(control_frame, text="About", bootstyle=INFO, command=self.show_about).pack(side=LEFT, padx=5)
 
@@ -157,7 +167,165 @@ class MetadataApp:
         self.metadata_dict[new_key] = new_value
         self.tree.insert("", "end", iid=new_key, values=(new_key, new_value))
 
+    # -----------------------------
+    # Open options: Local file or URL
+    # -----------------------------
+    def show_open_options(self):
+        popup = tk.Toplevel(self.root)
+        popup.title("Open")
+        popup.geometry("320x180")
+        popup.resizable(False, False)
 
+        tb.Label(
+            popup,
+            text="Open metadata from:",
+            font=("Arial", 12, "bold")
+        ).pack(pady=10)
+
+        btn_frame = tb.Frame(popup)
+        btn_frame.pack(pady=10)
+
+        def open_local():
+            popup.destroy()
+            self.open_file()
+
+        def open_url():
+            popup.destroy()
+            self.open_from_url()
+
+        tb.Button(
+            btn_frame,
+            text="Local File",
+            bootstyle=PRIMARY,
+            command=open_local,
+            width=14
+        ).grid(row=0, column=0, padx=8)
+
+        tb.Button(
+            btn_frame,
+            text="From URL",
+            bootstyle=INFO,
+            command=open_url,
+            width=14
+        ).grid(row=0, column=1, padx=8)
+
+        tb.Button(
+            popup,
+            text="Cancel",
+            bootstyle=SECONDARY,
+            command=popup.destroy
+        ).pack(pady=5)
+
+    # -----------------------------
+    # Open file from URL
+    # -----------------------------
+    def open_from_url(self):
+        url_win = tk.Toplevel(self.root)
+        url_win.title("Open from URL")
+        url_win.geometry("450x180")
+        url_win.resizable(False, False)
+
+        tb.Label(
+            url_win,
+            text="Enter image/video URL:",
+            font=("Arial", 11)
+        ).pack(pady=10)
+
+        url_var = tk.StringVar()
+        entry = tb.Entry(url_win, textvariable=url_var)
+        entry.pack(fill=X, padx=20)
+        entry.focus_set()
+
+        status_label = tb.Label(url_win, text="", bootstyle=INFO)
+        status_label.pack(pady=5)
+
+        def do_download_and_open():
+            url = url_var.get().strip()
+            if not url:
+                messagebox.showerror("Error", "Please enter a URL.")
+                return
+
+            try:
+                status_label.configure(text="Downloading...")
+                url_win.update_idletasks()
+
+                # Create temp dir
+                tmp_dir = tempfile.mkdtemp(prefix="exifplus_")
+                parsed = urllib.parse.urlparse(url)
+                filename = os.path.basename(parsed.path) or "downloaded_file"
+                local_path = os.path.join(tmp_dir, filename)
+
+                # Browser-like headers
+                headers = {
+                    "User-Agent": (
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/120.0.0.0 Safari/537.36"
+                    ),
+                    "Accept": "image/*,*/*;q=0.8"
+                }
+
+                def attempt_download(add_referer=False):
+                    req = urllib.request.Request(url, headers=headers.copy())
+                    if add_referer:
+                        req.add_header("Referer", f"{parsed.scheme}://{parsed.netloc}")
+                    try:
+                        with urllib.request.urlopen(req, timeout=15) as resp:
+                            data = resp.read()
+                            with open(local_path, "wb") as f:
+                                f.write(data)
+                        return True
+                    except Exception:
+                        return False
+
+                # Try 1: Normal browser headers
+                ok = attempt_download(add_referer=False)
+
+                # Try 2: Add Referer header (bypass hotlinking rules)
+                if not ok:
+                    ok = attempt_download(add_referer=True)
+
+                # If still blocked → ask user to open in browser
+                if not ok:
+                    ask = messagebox.askyesno(
+                        "Download Blocked",
+                        "The server blocked downloading this image.\n"
+                        "Do you want to open the URL in your browser to save it manually?"
+                    )
+                    if ask:
+                        webbrowser.open(url)
+                    return
+
+                # SUCCESS → load file
+                self.current_file = local_path
+                self.file_label.config(text=local_path)
+
+                for row in self.tree.get_children():
+                    self.tree.delete(row)
+
+                self.load_metadata()
+
+                url_win.destroy()
+
+            except Exception as e:
+                messagebox.showerror("Error", f"Error downloading file:\n{e}")
+
+        btn_frame = tb.Frame(url_win)
+        btn_frame.pack(pady=10)
+
+        tb.Button(
+            btn_frame,
+            text="Download & Open",
+            bootstyle=PRIMARY,
+            command=do_download_and_open
+        ).grid(row=0, column=0, padx=8)
+
+        tb.Button(
+            btn_frame,
+            text="Cancel",
+            bootstyle=SECONDARY,
+            command=url_win.destroy
+        ).grid(row=0, column=1, padx=8)
 
     # -----------------------------
     # Open File
@@ -187,20 +355,27 @@ class MetadataApp:
         try:
             # Read EXIF
             if path.lower().endswith((".jpg", ".jpeg", ".tiff", ".png", ".heic")):
-                with open(path, 'rb') as f:
-                    image_bytes = f.read()  # Read the image as bytes
-                    with pyexiv2.ImageData(image_bytes) as img:  # Open image from bytes
-                        # Read metadata
-                        for key, value in img.read_exif().items():
-                            self.metadata_dict[key] = str(value)
+                if IS_WINDOWS:
+                    # ---- Windows: use exifread fallback (pyexiv2 is unstable/crashy here) ----
+                    with open(path, "rb") as f:
+                        tags = exifread.process_file(f, details=False)
+                    for key, value in tags.items():
+                        self.metadata_dict[str(key)] = str(value)
+                else:
+                    with open(path, 'rb') as f:
+                        image_bytes = f.read()  # Read the image as bytes
+                        with pyexiv2.ImageData(image_bytes) as img:  # Open image from bytes
+                            # Read metadata
+                            for key, value in img.read_exif().items():
+                                self.metadata_dict[key] = str(value)
 
-                        # Read IPTC metadata
-                        for key, value in img.read_iptc().items():
-                            self.metadata_dict[key] = str(value)
+                            # Read IPTC metadata
+                            for key, value in img.read_iptc().items():
+                                self.metadata_dict[key] = str(value)
 
-                        # Read XMP metadata
-                        for key, value in img.read_xmp().items():
-                            self.metadata_dict[key] = str(value)
+                            # Read XMP metadata
+                            for key, value in img.read_xmp().items():
+                                self.metadata_dict[key] = str(value)
 
             # Video metadata
             if path.lower().endswith((".mp4", ".mov", ".avi", ".mkv")):
@@ -289,6 +464,15 @@ class MetadataApp:
     def save_metadata(self):
         if not self.current_file:
             messagebox.showerror("Error", "No file opened.")
+            return
+        
+        if IS_WINDOWS:
+            # On Windows, pyexiv2 is unstable for writing and may crash Python.
+            messagebox.showinfo(
+                "Not supported on Windows",
+                "Saving metadata directly into image files is not supported on Windows in this version.\n\n"
+                "You can still export metadata using the Export button (CSV or JSON)."
+            )
             return
 
         threading.Thread(target=self._save_metadata_thread, daemon=True).start()
@@ -430,6 +614,51 @@ class MetadataApp:
         except Exception as e:
             messagebox.showerror("Error", f"Error exporting JSON:\n{e}")
 
+    # -----------------------------
+    # Generate HTML report (for bug bounty etc.)
+    # -----------------------------
+    def generate_report(self):
+        if not self.current_file:
+            messagebox.showerror("Error", "No file opened.")
+            return
+
+        if not self.metadata_dict:
+            messagebox.showerror("Error", "No metadata loaded to include in report.")
+            return
+
+        report_path = filedialog.asksaveasfilename(
+            defaultextension=".html",
+            filetypes=[("HTML files", "*.html"), ("All files", "*.*")],
+            title="Save Metadata Report"
+        )
+        if not report_path:
+            return
+
+        try:
+            esc = html.escape
+
+            # Build table rows
+            rows_html = "\n".join(
+                f"<tr><td>{esc(str(k))}</td><td>{esc(str(v))}</td></tr>"
+                for k, v in self.metadata_dict.items()
+            )
+
+            # Normalize path for file://
+            img_path = os.path.abspath(self.current_file)
+            img_uri = "file:///" + img_path.replace("\\", "/")
+
+            html_content = f"""<!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <title>ExifPlus Metadata Report</title> <style> body {{ font-family: Arial, sans-serif; margin: 20px; background-color: #f7f7f7; }} h1 {{ color: #333; }} .section {{ margin-bottom: 20px; padding: 15px; background: #ffffff; border-radius: 8px; box-shadow: 0 0 4px rgba(0,0,0,0.08); }} /* SIDE-BY-SIDE LAYOUT */ .content-flex {{ display: flex; gap: 20px; align-items: flex-start; }} .image-container {{ flex: 1; text-align: center; }} .image-container img {{ max-width: 100%; border-radius: 6px; border: 1px solid #ccc; }} .metadata-table {{ flex: 2; }} table {{ border-collapse: collapse; width: 100%; font-size: 13px; }} th, td {{ border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }} th {{ background-color: #f0f0f0; }} .footer {{ margin-top: 25px; font-size: 12px; color: #777; }} </style> </head> <body> <h1>Metadata Report</h1> <div class="section"> <strong>File:</strong> {esc(img_path)}<br> <p>This report was generated by <strong>ExifPlus</strong>.</p> </div> <!-- SIDE BY SIDE CONTENT --> <div class="section content-flex"> <!-- LEFT: IMAGE --> <div class="image-container"> <h2>Image Preview</h2> <img src='{img_uri}' alt="Image preview"> </div> <!-- RIGHT: METADATA TABLE --> <div class="metadata-table"> <h2>Metadata</h2> <table> <thead> <tr><th>Key</th><th>Value</th></tr> </thead> <tbody> {rows_html} </tbody> </table> </div> </div> <div class="footer"> Generated by ExifPlus — https://pypi.org/project/exifplus/ </div> </body> </html> """
+            
+            with open(report_path, "w", encoding="utf-8") as f:
+                f.write(html_content)
+
+            messagebox.showinfo("Report Generated", f"Report saved to:\n{report_path}")
+
+            # Open report in default browser
+            webbrowser.open("file:///" + report_path.replace("\\", "/"))
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Error generating report:\n{e}")
 
     # -----------------------------
     # About Window
