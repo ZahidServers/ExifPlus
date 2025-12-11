@@ -64,3 +64,27 @@ The API is minimal, as ExifPlus is mostly GUI-based. See:
 
    modules
 
+=================
+Author & Support
+=================
+
+Developed By
+============
+
+**Mohammed Zahid Wadiwale**
+
+- 🌐 Website — https://www.webaon.com  
+- 💻 GitHub — https://github.com/ZahidServers  
+- 📰 Blog — https://blog.webaon.com  
+- 🎓 Academy — https://academy.webaon.com  
+
+Support the Project
+===================
+
+You can support ExifPlus development by purchasing services from Webaon:
+
+- Hosting  
+- Domains  
+- Website development  
+- Cybersecurity services  
+- Online courses  
