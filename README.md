@@ -77,8 +77,6 @@ pip install pyexiv2 hachoir ttkbootstrap
    * **No EXIF on hosted/resized images:** Services like Blogger/Google often strip EXIF metadata when resizing or serving images. If a URL opens but shows no metadata, try using the original/original-size file you uploaded instead of a CDN/resized copy.
    * **Windows users:** In-place writing of metadata may be limited on Windows (some native libraries are unstable). Use the **Export → JSON/CSV** feature to save metadata, or run on Linux/macOS for full read/write support.
 
----
-
 3. **View and Edit Metadata:**
    Once the file is loaded, the metadata will be displayed in a table format with columns for the metadata **Key** and **Value**. You can:
 
