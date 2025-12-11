@@ -21,13 +21,15 @@ ExifPlus is a modern and intuitive tool designed for managing metadata in image 
 
 ### **Key Features**
 
-* **Read and Edit EXIF, IPTC, and XMP metadata** from images and videos.
+* **Read and Edit EXIF, IPTC, XMP and other metadata** from images and videos. (Right Now Windows doesnt support Edit mode, also doesnt Supports IPTC and XMP.)
 * **User-friendly GUI** built with `tkinter` and `ttkbootstrap` for a sleek and responsive interface.
 * **Supports multiple media formats** including `.jpg`, `.png`, `.tiff`, `.heic`, `.mp4`, `.avi`, `.mov`, and `.mkv`.
 * **Batch processing** to edit metadata across multiple files (future versions).
 * **Save changes to metadata** and overwrite the original file.
 * **Context Menu** with an option to delete rows of metadata for easy data management, or add new rows.
 * **Export** the data as CSV or JSON
+* **Open From URL or Local File** Now you can directly upload images from URL or still choose your Local File
+* **Generate Reports** that ready to sumit in Bugcrowd or HackerOne, HTML format reports.
 * **Cross-platform** support (Windows, macOS, Linux).
 
 ### **Installation**
@@ -59,11 +61,23 @@ pip install pyexiv2 hachoir ttkbootstrap
 
    This will open the ExifPlus GUI, where you can load your files and begin editing metadata.
 
-2. **Open File:**
-   Click the "Open File" button to choose an image or video file. Supported formats include:
+2. **Open (Local file / From URL)**
+   Click the **Open** button to load an image or video. When you click **Open** a small dialog appears letting you choose one of two options:
+   * **Local File** — choose a single image or video file from your computer.
+   * **From URL** — paste a public image/video URL and ExifPlus will download and open it for inspection.
 
-   * Images: `.jpg`, `.jpeg`, `.png`, `.tiff`, `.heic`
-   * Videos: `.mp4`, `.mov`, `.avi`, `.mkv`
+   **Supported formats**
+   
+   * **Images:** `.jpg`, `.jpeg`, `.png`, `.tiff`, `.heic`
+   * **Videos:** `.mp4`, `.mov`, `.avi`, `.mkv`
+   
+   **Notes & troubleshooting**
+   
+   * **403 / hotlinking:** Some sites block programmatic downloads (hotlink protection or CDN rules). If a URL download is blocked ExifPlus will prompt you to open the image in your browser so you can save it manually.
+   * **No EXIF on hosted/resized images:** Services like Blogger/Google often strip EXIF metadata when resizing or serving images. If a URL opens but shows no metadata, try using the original/original-size file you uploaded instead of a CDN/resized copy.
+   * **Windows users:** In-place writing of metadata may be limited on Windows (some native libraries are unstable). Use the **Export → JSON/CSV** feature to save metadata, or run on Linux/macOS for full read/write support.
+
+---
 
 3. **View and Edit Metadata:**
    Once the file is loaded, the metadata will be displayed in a table format with columns for the metadata **Key** and **Value**. You can:
@@ -77,7 +91,24 @@ pip install pyexiv2 hachoir ttkbootstrap
 5. **Delete Metadata Row:**
    To delete a specific metadata entry, right-click on a row and select "Delete Row". A confirmation dialog will appear to ensure you want to proceed with the deletion.
 
-6. **About Window:**
+6. **Generate Report (HTML)**
+   Click the **Generate Report** button to create a clean, professional **HTML metadata report**, ideal for:
+   * Bugcrowd submissions
+   * HackerOne reports
+   * Security audits
+   * Forensic analysis
+   * Documentation
+
+   The generated HTML report includes:
+
+   * **Side-by-side image preview and metadata table**
+   * Clean markup that can be viewed in any browser
+   * Easily attachable as a file or screenshot
+   * Automatically extracted EXIF, IPTC, XMP, and video/image metadata
+
+   This feature makes it extremely easy to share metadata findings professionally.
+
+7. **About Window:**
    Click on the "About" button to view information about the tool and the author.
 
 ### **Troubleshooting**
@@ -180,11 +211,16 @@ python -m exifplus
 
 ---
 
-### Screenshot
+### Screenshots
 
 ![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshot.png)
 ![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshots.png)
 ![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshots2.png)
+![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshot5.png)
+![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshot6.png)
+![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshot7.png)
+![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshot8.png)
+![ExifPlus Screenshot](https://raw.githubusercontent.com/ZahidServers/ExifPlus/refs/heads/main/Screenshot9.png)
 
 ---
 
