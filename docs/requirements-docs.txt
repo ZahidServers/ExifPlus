@@ -1,5 +1,5 @@
 # docs/requirements-docs.txt — pinned for reproducible builds
-Sphinx==9.0.4
+Sphinx>=7,<9
 sphinx-rtd-theme==3.0.2
 sphinx-autodoc-typehints>=1.28
 sphinx-copybutton==0.5.2
