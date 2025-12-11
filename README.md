@@ -4,6 +4,7 @@
 [![Python versions](https://img.shields.io/pypi/pyversions/exifplus.svg)](https://pypi.org/project/exifplus/)
 [![License](https://img.shields.io/pypi/l/exifplus.svg)](https://github.com/ZahidServers/ExifPlus/blob/main/LICENSE)
 [![Tests](https://github.com/ZahidServers/ExifPlus/actions/workflows/python-package.yml/badge.svg)](https://github.com/ZahidServers/ExifPlus/actions)
+[![Documentation Status](https://readthedocs.org/projects/exifplus/badge/?version=latest)](https://exifplus.readthedocs.io/en/latest/)
 
 ### **ExifPlus** - Short Description & ReadMe
 
