@@ -29,7 +29,7 @@ ExifPlus is a modern and intuitive tool designed for managing metadata in image 
 * **Context Menu** with an option to delete rows of metadata for easy data management, or add new rows.
 * **Export** the data as CSV or JSON
 * **Open From URL or Local File** Now you can directly upload images from URL or still choose your Local File
-* **Generate Reports** that ready to sumit in Bugcrowd or HackerOne, HTML format reports.
+* **Generate Reports** that are formatted in HTML and ready for submission to platforms such as Bugcrowd or HackerOne.
 * **Cross-platform** support (Windows, macOS, Linux).
 
 ### **Installation**
